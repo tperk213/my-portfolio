@@ -1,0 +1,21 @@
+
+.nav-wrapper{
+    background-color: rgb(85, 172, 212);
+    color: white;
+    display: grid;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 10vh;
+}
+
+.nav-logo{
+    background-color: teal;
+    grid-column: 1;
+}
+
+.nav-links{
+    grid-column: 2/3;
+    display: grid;
+    display:flex;
+    background-color: teal;
+}
