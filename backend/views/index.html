@@ -1,0 +1,27 @@
+<html>
+
+<body>
+    <h1>Add project</h1>        
+    <form id="project-form" enctype="multipart/form-data" method="post" action="/api/add-project">
+        <input type="text" name="title" id="title" placeholder="project name here"/>
+        <input type="text" name="description" id="description" placeholder="Short description"/>
+        <input type="text" name="code_link" id="" placeholder="Source code link"/>
+        <input type="text" name="page_link" id="page_link" placeholder="page link here"/>
+        <input type="date" name="date_created" id="date_created" placholder="date created"/>
+        <input type="date" name="date_last_modified" id="date_last_modified" placholder="date last modified"/>
+        <input type="file" name="img_to_upload" id="img_to_upload">
+        <label for="showcase">Showcase</label>
+        <input type="checkbox" name="showcase" id="showcase">
+        <input type="submit" name="submit" id="submit" value="create project">
+    </form>
+    <!-- <script>
+        const projForm = document.getElementById("project-form");
+  
+        projForm.addEventListener("submit", () => {
+          projForm.action = `/api/add-project`;
+          projForm.submit();
+        });
+      </script> -->
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+
+.showcase-wrapper{
+    height: 400px;
+    align-items: flex-end;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 100px;
+}
+.showcase-grid{
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr 3fr 3fr 3fr 1fr;
+    
+}
+
+.showcase-control{
+    line-height: 100%;
+    height: 100%;
+    padding: 45% 45% 45% 45%;
+    justify-content: center;
+    align-items: center;
+    line-height: 100%;
+}
+.showcase-pannel{
+    height: 100%;
+    
+}
+
+.showcase-image{
+    width: 100%;
+
+}

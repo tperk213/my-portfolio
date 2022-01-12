@@ -1,5 +1,7 @@
 
 .app-body{
-    margin-left: 15vw;
+    margin-left: 10vw;
+    margin-right: 10vw;
     margin-top: 5vh;
+    height: 100vh;
 }
