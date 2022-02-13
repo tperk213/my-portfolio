@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const multer = require('multer');
+const sharp = require('sharp');
 require('dotenv').config()
 
 const dbhandler = require('./dbhandler');
@@ -17,11 +18,12 @@ app.use(cors())
 
 
 var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 
 //multer setup
-const storage = multer.diskStorage({
+
+const diskStorage = multer.diskStorage({
     destination: (req, file, cb)=>{
         cb(null, 'uploads/');
     },
@@ -30,7 +32,20 @@ const storage = multer.diskStorage({
         cb(null, req.body.title + '_' + file.originalname);
     }
 });
-const upload = multer({ storage:storage });
+
+const multerFilter = (req, file, next) => {
+    if(file.mimetype.startsWith("image")){
+        next(null, true);
+    }else{
+        next("Only images excepted to upload", false);
+    }
+}
+
+const multerStorage = multer.memoryStorage();
+const upload = multer({ 
+    storage:multerStorage, 
+    fileFilter: multerFilter,
+});
 
 
 
@@ -44,27 +59,22 @@ app.get('/api/photo/:photo_name', (req,res)=>{
     res.sendFile(__dirname + '/uploads/' + req.params.photo_name);
 });
 
-app.post('/api/add-project', upload.single('img_to_upload'), (req, res, next)=>{
+app.post('/api/add-project', (req, res, next)=>{
     //validation
     next();
 },
-(req,res)=>{
-    // name:{type:String, required:true, unique:true, dropDups:true},
-    // description:{type:String},
-    // cover_photo:{type:String},
-    // code_link:{type:String},
-    // display_link:{type:String},
-    // date_created:{type:Date, default:Date().now()},
-    // date_last_modified:{type:Date, default:Date().now()}
+upload.single('img_to_upload'),
+async (req,res,next) =>{
     
-//     name="title" placeholder="
-// name="description" placeholder="
-// name="code-link" placeholder
-// name="page-link" placeholder
-// name="date-created" placholder
-// name="date-last-modified"
-// name="img">
-//         <input type
+    if(!req.file) return next();
+
+    const newFile = await sharp(req.file.buffer).resize(600,750).toFormat('jpeg').jpeg({quality: 90}).toFile(`uploads/${req.body.title + '_' + req.file.originalname}`);
+    //##########################################################Here resizing images
+    //https://www.bezkoder.com/node-js-upload-resize-multiple-images/
+    next();
+},
+(req,res)=>{
+
     
 //linking the form and database creat object here
     let project_data = {
@@ -87,6 +97,32 @@ app.post('/api/add-project', upload.single('img_to_upload'), (req, res, next)=>{
         res.json(project);
     });
 });
+
+app.post("/api/update/:proj_name", 
+    (req,res,next)=>{
+    //validation
+        next();
+    },
+    upload.single('img_to_upload'),
+    async (req,res,next) =>{
+    
+        if(!req.file) return next();
+        const photo_name = req.params.proj_name + '_' + req.file.originalname;
+        const newFile = await sharp(req.file.buffer).resize(600,750).toFormat('jpeg').jpeg({quality: 90}).toFile(`uploads/${photo_name}`);
+        req.body['cover_photo'] = photo_name;
+        //##########################################################Here resizing images
+        //https://www.bezkoder.com/node-js-upload-resize-multiple-images/
+        next();
+    },
+    async (req,res)=>{
+        //linking the form and database creat object here
+        projectUpdateFields = {...req.body}
+        projectUpdateFields.date_last_modified = Date.now();
+
+        const updated = await dbhandler.updateProject(req.params.proj_name, projectUpdateFields);
+        res.json(updated);
+    }
+);
 
 app.get("/api/showcase", (req, res)=>{
     dbhandler.getShowcase((err, showcase, status)=>{
@@ -115,17 +151,26 @@ app.get("/api/showcase/length", (req, res)=>{
 });
 
 //get project
-app.get("/api/project/:project_name", (req, res)=>{
+app.get("/api/project/:project_name", async (req, res)=>{
     //call get project function with :project_name as param
     console.log(req.params.project_name);
-    dbhandler.getProject(req.params.project_name, (err, project, status)=>{
-        if(project === null){
-            console.log(status);
-            res.json({project_status: 'missing'});
-        }
-        res.json(project);
-    });
+    const project = await dbhandler.getProject(req.params.project_name);
+    if(project === {}){
+        res.json({project_status: 'missing'});
+        return;
+    }
+    res.json(project);
    
+});
+
+app.get("/api/projects/:startIndex/:ammountToFetch", (req, res)=>{
+    dbhandler.getProjects(parseInt(req.params.startIndex), parseInt(req.params.ammountToFetch), (projects) => {
+        if(projects === null){
+            console.log('Error retrieving projects from database');
+        }
+        res.json(projects);
+    });
+
 });
 
 

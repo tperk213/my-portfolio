@@ -45,13 +45,15 @@ const createProject = async (projectData, done) =>{
 
 }
 
-const getProject = async (projectName, done) => {
+const getProject = async (projectName) => {
     try{
         const found_project = await Project.findOne({name:projectName}).exec();
         if(!found_project){
-            done(null, null, "couldnt find project");
+            console.log("couldnt find project");
+            return {};
         }
-        done(null, found_project, "found project");
+        console.log("found project");
+        return found_project;
 
     }catch(err){
         return console.log("Error getting project from database in getProject" + err);
@@ -87,6 +89,23 @@ const getShowcaseRange = async (startIndex, endIndex, done) => {
     }
 }
 
+const getProjects = async (startIndex, ammountToGet, done) => {
+    try{
+        const projects = await Project.find().sort('_id');
+        done(projects.slice(startIndex, startIndex + ammountToGet));
+    }catch(err){
+        return console.log(`Error getting projects from ${startIndex} to ${startIndex + ammountToGet} `);
+    }
+}
+
+const updateProject = async (projectName, fieldsToUpdate) => {
+    try{
+        const updatedProject = await Project.findOneAndUpdate({"name": projectName}, fieldsToUpdate, {new: true}); 
+        return updatedProject;
+    }catch(err){
+        return console.log(`Error updating project ${projectName} with fields ${fieldsToUpdate}`);
+    }
+}
 
 
 module.exports = {
@@ -95,4 +114,6 @@ module.exports = {
     getShowcase,
     getShowcaseLength,
     getShowcaseRange,
+    getProjects,
+    updateProject,
 }

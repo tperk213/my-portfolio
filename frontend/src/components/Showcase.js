@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../styles/Showcase.css'
 
 const Showcase = () => {
@@ -17,7 +18,7 @@ const Showcase = () => {
 
     useEffect(()=>{
         fetchLength();
-    });
+    }, []);
 
 
     //function to get the item and asign it to state property
@@ -60,8 +61,10 @@ const Showcase = () => {
                 <button className="showcase-control" onClick={indexDec}  >&lt;</button>
                 {Object.entries(showcase).map(project => (
                     <div className="showcase-pannel">
-                        {project[1].name}
-                        <img className="showcase-image" src={`http://localhost:3001/api/photo/${project[1].cover_photo}`} alt=""/>
+                        <Link to={`/project/${project[1].name}`}>
+                            {project[1].name}
+                            <img className="showcase-image" src={`http://localhost:3001/api/photo/${project[1].cover_photo}`} alt=""/>
+                        </Link>
                     </div>
                 ))}
                 <button className="showcase-control" onClick={indexInc}>&gt;</button>

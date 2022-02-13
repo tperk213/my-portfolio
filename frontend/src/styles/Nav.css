@@ -6,6 +6,9 @@
     justify-content: space-around;
     align-items: center;
     min-height: 10vh;
+    position: fixed;
+    top:0;
+    width: 100%;
 }
 
 .nav-logo{
