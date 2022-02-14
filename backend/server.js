@@ -163,13 +163,17 @@ app.get("/api/project/:project_name", async (req, res)=>{
    
 });
 
-app.get("/api/projects/:startIndex/:ammountToFetch", (req, res)=>{
-    dbhandler.getProjects(parseInt(req.params.startIndex), parseInt(req.params.ammountToFetch), (projects) => {
+app.get("/api/projects/:page", (req, res)=>{
+    //get  projects
+    dbhandler.getProjects(parseInt(req.params.page), (projects, total) => {
         if(projects === null){
             console.log('Error retrieving projects from database');
         }
-        res.json(projects);
+        
+        res.json({'projects':projects, 'total': total});
     });
+    //get total amount of projects
+
 
 });
 

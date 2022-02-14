@@ -89,14 +89,18 @@ const getShowcaseRange = async (startIndex, endIndex, done) => {
     }
 }
 
-const getProjects = async (startIndex, ammountToGet, done) => {
+const getProjects = async (page, done) => {
+    const ammountPerPage = 3;
+    const startIndex = page * ammountPerPage - 3;
+    const endIndex = startIndex + ammountPerPage;
     try{
         const projects = await Project.find().sort('_id');
-        done(projects.slice(startIndex, startIndex + ammountToGet));
+        done(projects.slice(startIndex, endIndex), projects.length);
     }catch(err){
-        return console.log(`Error getting projects from ${startIndex} to ${startIndex + ammountToGet} `);
+        return console.log(`Error getting projects from ${startIndex} to ${endIndex} `);
     }
 }
+
 
 const updateProject = async (projectName, fieldsToUpdate) => {
     try{
@@ -116,4 +120,5 @@ module.exports = {
     getShowcaseRange,
     getProjects,
     updateProject,
+
 }

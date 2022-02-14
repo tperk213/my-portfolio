@@ -61,7 +61,7 @@ const Showcase = () => {
                 <button className="showcase-control" onClick={indexDec}  >&lt;</button>
                 {Object.entries(showcase).map(project => (
                     <div className="showcase-pannel">
-                        <Link to={`/project/${project[1].name}`}>
+                        <Link key={project.name} to={`/project/${project[1].name}`}>
                             {project[1].name}
                             <img className="showcase-image" src={`http://localhost:3001/api/photo/${project[1].cover_photo}`} alt=""/>
                         </Link>

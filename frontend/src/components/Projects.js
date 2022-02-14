@@ -1,60 +1,55 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import useProjects from '../hooks/useProjects'
 
 const Projects = () =>{
 
-    const [projects, setProjects] = useState([]);
-    const [currentIndex, setIndex] = useState(0);
-    const [totalAmmountOfProjects, setLength] = useState(0);
-    const ammountToFetch = 2;
+    const [pageNumber, setPageNumber] = useState(1);
 
-    
-    useEffect(() => {
-        fetchProjects();
-    }, []);
-    
-    useEffect(() => {
-        fetchLength();
-    }, []);
-    
-    
-    const fetchLength = async () => {
-        const fetchLength = await fetch(`http://localhost:3001/api/showcase/length`);
-        const length = await fetchLength.json();
+    const {
+        loading,
+        hasMore,
+        projects
+    } = useProjects(pageNumber);
 
-        setLength(length.length);
-    }
-
-    const fetchProjects = async () => {
-        const rawProjects = await fetch(`http://localhost:3001/api/projects/${currentIndex}/${ammountToFetch}`);
-        const projects = await rawProjects.json();
-        setIndex(currentIndex + projects.length);
-        setProjects(currentProjects => [ ...currentProjects, ...projects]);
-    }
-
-    const loadMoreProjects = () => {
-        if(currentIndex === totalAmmountOfProjects) return;
-        if ((currentIndex + ammountToFetch) > totalAmmountOfProjects){
-            setIndex(totalAmmountOfProjects);
-        }
-        setIndex(currentIndex + ammountToFetch);
-        fetchProjects();
-    }
+    const observer = useRef()
+    const lastProjectElementRef = useCallback(node => {
+        if(loading) return;
+        if(observer.current) observer.current.disconnect();
+        observer.current = new IntersectionObserver(entries => {
+            if(entries[0].isIntersecting && hasMore){
+                console.log('Vissible');
+                setPageNumber(prevPageNumber => prevPageNumber + 1);
+            }
+        });
+        if(node) observer.current.observe(node);
+    }, [loading, hasMore]);
 
     return(
         <div className='projects-wrapper'>
             <h2>Projects</h2>
             <div className="projects-grid">
-                {projects.map(project => (
-                    <div>
-                        <Link to={`/project/${project.name}`} >
-                            {project.name}
-                            <img className="project-image" src={`http://localhost:3001/api/photo/${project.cover_photo}`} alt=""/>
-                        </Link>
-                    </div>
-                ))}
-                <button onClick={loadMoreProjects}>More...</button>
+                {projects.map((project, index) => {
+                    if(projects.length === index+1){
+                        return(<div ref={lastProjectElementRef} key={project.name}>
+                            <Link to={`/project/${project.name}`} >
+                                {project.name}
+                                <img className="project-image" src={`http://localhost:3001/api/photo/${project.cover_photo}`} alt=""/>
+                            </Link>
+                        </div>);
+                    }else{
+                        return(
+                            <div key={project.name}>
+                                <Link to={`/project/${project.name}`} >
+                                    {project.name}
+                                    <img className="project-image" src={`http://localhost:3001/api/photo/${project.cover_photo}`} alt=""/>
+                                </Link>
+                            </div>
+                        );
+                    }
+                })}
+                <div>{loading && 'Loading...'}</div>
             </div>    
         </div>
     );
