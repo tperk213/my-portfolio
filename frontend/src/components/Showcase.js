@@ -53,23 +53,25 @@ const Showcase = () => {
     }
 
     return(
-        <div className="showcase-wrapper">
-            {/* 3-4 projects that have pictures as links maybe description short */}
-            <h1>Showcase</h1>
-            {/* loop through projects that are returned in the get showcase and display their title, picture and description */}
-            <div className="showcase-grid">
-                <button className="showcase-control" onClick={indexDec}  >&lt;</button>
-                {Object.entries(showcase).map(project => (
-                    <div className="showcase-pannel">
-                        <Link key={project.name} to={`/project/${project[1].name}`}>
-                            {project[1].name}
-                            <img className="showcase-image" src={`http://localhost:3001/api/photo/${project[1].cover_photo}`} alt=""/>
-                        </Link>
-                    </div>
-                ))}
-                <button className="showcase-control" onClick={indexInc}>&gt;</button>
+        <>
+            <div className='showcase-wrapper'>
+                {/* 3-4 projects that have pictures as links maybe description short */}
+                <h1>Showcase</h1>
+                {/* loop through projects that are returned in the get showcase and display their title, picture and description */}
+                <div className="showcase-grid">
+                    <button className="showcase-button" onClick={indexDec}  >&lt;</button>
+                    {Object.entries(showcase).map(project => (
+                        <div className="showcase-pannel" style={{ backgroundImage : `url("http://localhost:3001/api/photo/${project[1].cover_photo}")` }}>
+                            <Link key={project.name} to={`/project/${project[1].name}`}>
+                                {project[1].name}
+                                {/* <img className="showcase-image" src={`http://localhost:3001/api/photo/${project[1].cover_photo}`} alt=""/> */}
+                            </Link>
+                        </div>
+                    ))}
+                    <button className="showcase-button" onClick={indexInc}>&gt;</button>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

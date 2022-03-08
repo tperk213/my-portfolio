@@ -1,14 +1,89 @@
 
-.nav-wrapper{
+
+.banner{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: #24252a;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10%;
+
+    min-height: 10vh;
+    position: fixed;
+    top:0;
+    width: 100%;
+}
+
+li,a,button, img{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: whitesmoke;
+    text-decoration: none;
+}
+
+.logo{
+    cursor: pointer;
+    margin-right: auto;
+}
+
+.nav__links{
+    list-style: none;
+}
+
+.nav__links li {
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.nav__links li a {
+    transition: all 0.3s ease 0s;
+}
+
+.nav__links li a:hover {
+    color: #0088a9;
+}
+
+.nav__button {
+    padding: 9px 25px;
+    background-color: rgba(0, 136, 169, 1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.nav__button:hover{
+    background-color: rgba(0, 136, 169, 0.7);
+}
+
+
+
+
+
+
+
+.nav{
     background-color: rgb(85, 172, 212);
     color: white;
-    display: grid;
-    justify-content: space-around;
     align-items: center;
     min-height: 10vh;
     position: fixed;
     top:0;
     width: 100%;
+}
+
+.nav-element-wrapper{
+    display: flex;
+    margin-left: auto;
+    margin-right:auto;
+}
+
+.nav-links{
+
 }
 
 .nav-logo{
@@ -22,3 +97,48 @@
     display:flex;
     background-color: teal;
 }
+
+
+/*
+
+ 3 types of nav bars
+
+
+
+ 1.
+    <header>
+        <img class='logo' scr='bla' alt='logo'/>
+        <nav>
+            <ul>
+            ...
+            </ul>
+        </nav>
+
+    </header>
+
+    css
+    *{
+        box-sizing: border-box;
+        margin:0;
+        padding:0;
+        bacgorund-colour:;
+
+    }
+
+    li, button, a {
+        font-family: "monserat", sand-serif;
+        font-weight: 500;
+        font-size: 16px;
+        color: off-white;
+        text-decoration: none;
+    }
+
+    header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 10%;
+
+    }
+
+*/

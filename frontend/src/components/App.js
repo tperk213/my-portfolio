@@ -1,8 +1,10 @@
 import '../styles/App.css'
+import '../styles/crayons.css'
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 //components
 import Nav from './Nav.js';
+import Creator from './Creator.js';
 import Showcase from './Showcase.js';
 import Projects from './Projects.js';
 import Home from './Home.js'
@@ -24,9 +26,10 @@ const App = () => {
     }
     return(
     
-    <div className="app-wrapper">
+    <div>
         <Nav />
-        <div className="app-body">
+        <Creator />
+        <div className='app-body'>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/project/:name" element={<ProjectDetails />} />
